@@ -12,6 +12,20 @@ from vision_agents.plugins import getstream, gemini
 
 load_dotenv()
 
+# Monkey-patch EventManager to resolve NoneType startswith AttributeError on Render
+from vision_agents.core.events.manager import EventManager
+def safe_register_events_from_module(self, module, prefix="", ignore_not_compatible=True):
+    for name, class_ in module.__dict__.items():
+        if name.endswith("Event"):
+            evt_type = getattr(class_, "type", "")
+            if evt_type is None:
+                evt_type = ""
+            if not prefix or evt_type.startswith(prefix):
+                self.register(class_, ignore_not_compatible=ignore_not_compatible)
+                self._modules.setdefault(module.__name__, []).append(class_)
+EventManager.register_events_from_module = safe_register_events_from_module
+
+
 # Regex for common filler words in English/French
 FILLER_REGEX = re.compile(r'\b(uh|um|like|you know|euh|donc|ah)\b', re.IGNORECASE)
 
