@@ -2,7 +2,7 @@ services:
   - type: web
     name: gravelly-ai-coach
     runtime: python
-    region: frankfurt
+    region: oregon
     plan: free
     autoDeployTrigger: off
 
