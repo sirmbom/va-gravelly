@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: gravelly-ai-coach
+    runtime: python
+    region: frankfurt
+    plan: free
+    autoDeployTrigger: off
+
+    buildCommand: "pip install ."
+    startCommand: "python main.py serve --host 0.0.0.0 --port $PORT"
+
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.0
+      - key: GOOGLE_API_KEY
+        sync: false
+      - key: STREAM_API_KEY
+        sync: false
+      - key: STREAM_API_SECRET
+        sync: false
