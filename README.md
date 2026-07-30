@@ -1,115 +1,80 @@
-# Gravelly
+# Gravelly: Real-Time AI Speech Coach & Interview Prep Trainer
 
-Gravelly is a vision-agent-powered coaching app designed to help people improve their public speaking, presentation delivery, and job interview performance in real time. It combines speech analysis with an AI coach experience to give users live feedback on pacing, filler words, and overall clarity.
+[![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi&logoColor=00FFCC)](https://fastapi.tiangolo.com/)
+[![Google GenAI SDK](https://img.shields.io/badge/Google%20GenAI%20SDK-4285F4?style=for-the-badge&logo=google&logoColor=white)](https://github.com/google/generative-ai-python)
+[![GetStream WebRTC](https://img.shields.io/badge/GetStream%20WebRTC-0052FF?style=for-the-badge&logo=stream&logoColor=white)](https://getstream.io/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
-## What this project does
+> Real-time AI speech coach & interview trainer powered by Gemini Live API & GetStream WebRTC. Tracks speaking pace and filler words to deliver instant conversational feedback.
 
-This project uses Gemini and Stream-based vision agents to create a live coaching experience where users can:
+Gravelly is an innovative, vision-agent-powered coaching application designed to help professionals, speakers, and job candidates refine public speaking, presentation delivery, and interview performance in real time. By leveraging low-latency, bi-directional WebRTC audio streaming, Gravelly analyzes speech patterns to intercept filler words and track words-per-minute (WPM), giving users actionable live vocal mentoring.
 
-- practice speaking in a realistic interview or presentation flow
-- receive live coaching feedback from an AI assistant
-- track metrics such as filler word usage and words-per-minute
-- use a simple web dashboard to start a coaching session
+---
 
-## Project structure
+## Interactive Trial Showcase
 
-- main.py: the FastAPI app and agent orchestration logic
-- pyproject.toml: Python package metadata and dependencies
-- render.yaml: Render deployment configuration
+<div align="center">
+  <a href="#" target="_blank">
+    <img src="https://img.shields.io/badge/Interactive%20Trial-Local%20Setup%20Required-FF4500?style=for-the-badge&logo=google-chrome&logoColor=white" height="40" alt="Gravelly Interactive Trial" />
+  </a>
+</div>
 
-## Prerequisites
+### Running the Local Interactive Demo:
+1. Clone the repository and configure `.env` with your `STREAM_API_KEY`, `STREAM_API_SECRET`, and `GEMINI_API_KEY`.
+2. Start the server using `python main.py`.
+3. Open `http://localhost:8000` in your web browser.
+4. Select your coaching scenario (Interview or Pitch Presentation).
+5. Click **Start Coaching Session** to initialize the low-latency WebRTC connection.
 
-Before running the app locally, make sure you have:
+---
 
-- Python 3.12 or newer
-- access to the following API credentials:
-  - GOOGLE_API_KEY
-  - STREAM_API_KEY
-  - STREAM_API_SECRET
+## Key Features
 
-## Local setup
+* **Bi-Directional WebRTC Audio Streaming**: Built on GetStream WebRTC edge infrastructure for sub-second vocal interaction.
+* **Live Speech Analytics**: Real-time monkey-patching of transcription emitters tracks WPM and detects filler words (`uh`, `um`, `like`, `you know`) via regex.
+* **Dynamic Web Dashboard**: Modern dark-themed UI featuring real-time polling to `/custom-session-info` for live metrics rendering.
+* **Customizable Personas**: Adaptive coaching system instructions tailored for public speaking or technical job interview prep.
 
-1. Create and activate a virtual environment:
+---
 
-   On Windows PowerShell:
+## Architecture Overview
 
-   ```powershell
-   py -3.12 -m venv .venv
-   .\.venv\Scripts\Activate.ps1
-   ```
+```
+[ User Browser / WebRTC Client ]
+            │
+    (WebRTC Stream / Audio Chunks)
+            │
+            ▼
+[ GetStream Edge Infrastructure ] ── (Server Events) ──► [ FastAPI Backend ]
+                                                                 │
+                                                    (Patched Speech Emitters)
+                                                                 │
+                                                                 ▼
+                                                  [ Gemini Live WebSockets ]
+```
 
-2. Install dependencies:
+---
 
-   ```bash
-   pip install -e .
-   ```
+## Repository Metadata & SEO Parameters
 
-3. Create a .env file in the project root with your credentials:
+* **About Description**: Real-time AI speech coach & interview trainer powered by Gemini Live API & GetStream WebRTC. Tracks speaking pace and filler words to deliver instant conversational feedback.
+* **Target Topics**: `gemini-live-api`, `webrtc`, `speech-coaching`, `fastapi`, `getstream`, `realtime-ai`, `python`, `ai-coach`.
 
-   ```env
-   GOOGLE_API_KEY=your_google_api_key
-   STREAM_API_KEY=your_stream_api_key
-   STREAM_API_SECRET=your_stream_api_secret
-   ```
+---
 
-4. Start the app:
+## Environment Configuration
 
-   ```bash
-   python main.py serve --host 0.0.0.0 --port 8000
-   ```
+Copy `.env.example` to `.env` and configure the following:
 
-5. Open the dashboard in your browser:
+```env
+GEMINI_API_KEY=your_gemini_api_key
+STREAM_API_KEY=your_stream_api_key
+STREAM_API_SECRET=your_stream_api_secret
+PORT=8000
+```
 
-   ```text
-   http://127.0.0.1:8000/
-   ```
-
-## How to use the app
-
-- Open the homepage to access the coaching dashboard.
-- Start a coaching session from the interface.
-- The AI assistant will listen to the user and provide live feedback, including notes about filler words and speaking pace.
-
-## Deploying to Render
-
-This repository includes a Render configuration in render.yaml for easy deployment.
-
-### Steps
-
-1. Push this repository to GitHub.
-2. Create a new Web Service in Render and connect the repository.
-3. Render will read render.yaml automatically.
-4. Add the required environment variables in the Render dashboard:
-   - GOOGLE_API_KEY
-   - STREAM_API_KEY
-   - STREAM_API_SECRET
-5. Deploy the service.
-
-### Render configuration summary
-
-The current render.yaml config:
-
-- creates a Python web service named gravelly-ai-coach
-- installs dependencies with pip install .
-- starts the app with:
-
-  ```bash
-  python main.py serve --host 0.0.0.0 --port $PORT
-  ```
-
-### Important note
-
-Render will not know your secrets unless you add them manually in the service environment settings. The render.yaml file marks them as sync: false so they can be provided securely from the Render dashboard.
-
-## Troubleshooting
-
-If the app does not start:
-
-- confirm your Python version is 3.12+
-- verify that your .env file exists and contains the required variables
-- ensure your API keys are valid and active
-- check the terminal output for missing dependency or authentication errors
+---
 
 ## License
 
-This project is intended for demonstration and coaching use cases.
+Distributed under the MIT License. See `LICENSE` for more information.
